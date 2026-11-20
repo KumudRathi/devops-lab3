@@ -1,0 +1,39 @@
+
+---
+- name: Configure web server using Ansible
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Update package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Create application directory
+      file:
+        path: /opt/devops-lab3
+        state: directory
+        mode: '0755'
+
+    - name: Deploy application web page
+      copy:
+        content: |
+          <html>
+          <body>
+          <h1>Hello from Ansible - Lab 3!</h1>
+          <p>Application configured automatically.</p>
+          </body>
+          </html>
+        dest: /opt/devops-lab3/index.html
+        mode: '0644'
